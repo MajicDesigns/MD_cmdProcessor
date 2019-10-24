@@ -33,7 +33,7 @@ public:
   */
   static const uint8_t CMD_TXT_SIZE = 2;   // allowed command max text length in characters
   static const uint8_t CMD_PARAM_SIZE = 8; // allowed length in characters for parameter help text
-  static const uint8_t CMD_HELP_SIZE = 30; // allowed length in characters for help text
+  static const uint8_t CMD_HELP_SIZE = 50; // allowed length in characters for help text
   typedef void (*cmdHandler_t)(char* param);
 
   struct cmdItem_t

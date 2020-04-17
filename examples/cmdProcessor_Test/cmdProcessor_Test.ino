@@ -5,14 +5,15 @@
 
 // handler function prototypes
 void handlerHelp(char* param);
-void handleA1(char* param);
+void handlerA1(char* param);
 void handlerZ9(char* param);
 
 const MD_cmdProcessor::cmdItem_t PROGMEM cmdTable[] =
 {
-  { "?",  handlerHelp, "",    "Help" },
-  { "a1", handlerA1,   "123", "Command A1" },
-  { "Z9", handlerZ9,   "456", "Command Z9" },
+  { "?",  handlerHelp, "",    "Help", 0 },
+  { "h",  handlerHelp, "",    "Help", 0 },
+  { "a1", handlerA1,   "123", "Command A1", 1 },
+  { "Z9", handlerZ9,   "456", "Command Z9", 1 },
 };
 
 MD_cmdProcessor CP(Serial, cmdTable, ARRAY_SIZE(cmdTable));
@@ -20,7 +21,7 @@ MD_cmdProcessor CP(Serial, cmdTable, ARRAY_SIZE(cmdTable));
 // handler functions
 void handlerHelp(char* param)
 {
-  Serial.print(F("\nHelp\n===="));
+  Serial.print(F("\nHelp\n----"));
   CP.help();
   Serial.print(F("\n"));
 }
@@ -40,8 +41,10 @@ void handlerZ9(char *param)
 void setup(void) 
 {
   Serial.begin(57600);
-  Serial.print(F("\nEnter command. Ensure line ending set to newline."));
+  Serial.print(F("\nMD_cmdProcessor Example\n-----------------------"));
+  Serial.print(F("\nEnter command. Ensure line ending set to newline.\n"));
   CP.begin();
+  CP.help();
 }
 
 void loop(void) 

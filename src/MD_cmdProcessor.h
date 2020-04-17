@@ -39,9 +39,10 @@ public:
   struct cmdItem_t
   {
     char cmd[CMD_TXT_SIZE+1];         // the actual command string
-    cmdHandler_t f;                     // address of the function to handle this command
+    cmdHandler_t f;                   // address of the function to handle this command
     char helpParam[CMD_PARAM_SIZE+1]; // format of the parameters following SPACE for help output
     char helpText[CMD_HELP_SIZE+1];   // text for this command's help
+    uint8_t group;                    // arbitrary group number - help leaves blank line when group changes
   };
 
   // Constructor/destructor
@@ -138,11 +139,18 @@ public:
   Useful for user code to maintain consistency but not grouped in any special way.
   */
   {
+    uint8_t g = 0;
+
     for (uint8_t i = 0; i < _cmdSize; i++)
     {
       cmdItem_t temp;
 
       memcpy_P((void *)&temp, (void *)(_cmdTable + i), sizeof(cmdItem_t));
+      if (g != temp.group)
+      {
+        _S.print(F("\n"));
+        g = temp.group;
+      }
       _S.print(F("\n"));
       _S.print(temp.cmd);
       _S.write(SPACE);

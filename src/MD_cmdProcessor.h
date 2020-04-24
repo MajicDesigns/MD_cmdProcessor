@@ -31,23 +31,23 @@ public:
   The command table is declared in the user code and a read-only reference
   is passed to the class for processing.
   */
-  static const uint8_t CMD_TXT_SIZE = 2;   // allowed command max text length in characters
-  static const uint8_t CMD_PARAM_SIZE = 8; // allowed length in characters for parameter help text
-  static const uint8_t CMD_HELP_SIZE = 50; // allowed length in characters for help text
+  static const uint8_t CMD_TXT_ScmdIZE = 2;   // allowed command max text length in characters
+  static const uint8_t CMD_PARAM_ScmdIZE = 8; // allowed length in characters for parameter help text
+  static const uint8_t CMD_HELP_ScmdIZE = 50; // allowed length in characters for help text
   typedef void (*cmdHandler_t)(char* param);
 
   struct cmdItem_t
   {
-    char cmd[CMD_TXT_SIZE+1];         // the actual command string
+    char cmd[CMD_TXT_ScmdIZE+1];         // the actual command string
     cmdHandler_t f;                   // address of the function to handle this command
-    char helpParam[CMD_PARAM_SIZE+1]; // format of the parameters following SPACE for help output
-    char helpText[CMD_HELP_SIZE+1];   // text for this command's help
+    char helpParam[CMD_PARAM_ScmdIZE+1]; // format of the parameters following SPACE for help output
+    char helpText[CMD_HELP_ScmdIZE+1];   // text for this command's help
     uint8_t group;                    // arbitrary group number - help leaves blank line when group changes
   };
 
   // Constructor/destructor
   MD_cmdProcessor(Stream& S, const cmdItem_t* cmdTable, uint16_t size) :
-    _S(S), _cmdTable(cmdTable), _cmdSize(size)
+    _Scmd(S), _cmdTable(cmdTable), _cmdSize(size), _cmdIdx(0)
   {}
 
   ~MD_cmdProcessor(void) {}
@@ -93,8 +93,8 @@ public:
       if (idx == _cmdSize)
       {
         // Not found :(
-        _S.print(F("\nInvalid cmd: "));
-        _S.print(pcmd);
+        _Scmd.print(F("\nInvalid cmd: "));
+        _Scmd.print(pcmd);
       }
       else
       {
@@ -116,16 +116,16 @@ public:
   at which time it is processed.
   */
   {
-    while (_S.available())
+    while (_Scmd.available())
     {
-      char c = _S.read();
+      char c = _Scmd.read();
 
       if (c == EOLN)  // end of line
       {
         process(_cmdInput);
         _cmdIdx = 0; // reset for the next run
       }
-      else if (_cmdIdx < CMD_BUF_SIZE - 1)  // don't overflow
+      else if (_cmdIdx < CMD_BUF_ScmdIZE - 1)  // don't overflow
       {
         _cmdInput[_cmdIdx++] = c;
         _cmdInput[_cmdIdx] = EOSTR;
@@ -148,21 +148,21 @@ public:
       memcpy_P((void *)&temp, (void *)(_cmdTable + i), sizeof(cmdItem_t));
       if (g != temp.group)
       {
-        _S.print(F("\n"));
+        _Scmd.print(F("\n"));
         g = temp.group;
       }
-      _S.print(F("\n"));
-      _S.print(temp.cmd);
-      _S.write(SPACE);
-      _S.print(temp.helpParam);
-      _S.print(F("\t"));
-      _S.print(temp.helpText);
+      _Scmd.print(F("\n"));
+      _Scmd.print(temp.cmd);
+      _Scmd.write(SPACE);
+      _Scmd.print(temp.helpParam);
+      _Scmd.print(F("\t"));
+      _Scmd.print(temp.helpText);
     }
   }
 
 private:
   // Constants
-  static const uint8_t CMD_BUF_SIZE = 40;  // allowed command buffer size in characters
+  static const uint8_t CMD_BUF_ScmdIZE = 40;  // allowed command buffer size in characters
 
   static const char SPACE = ' ';      // command space character
   static const char SEPARATOR = ';';  // command separator character
@@ -170,9 +170,9 @@ private:
   static const char EOSTR = '\0';     // command end of string character
 
   // Input/Output 
-  char _cmdInput[CMD_BUF_SIZE + 1]; // character buffer
-  uint16_t _cmdIdx = 0;             // next character store index
-  Stream& _S;                       // I/O stream object
+  char _cmdInput[CMD_BUF_ScmdIZE + 1]; // character buffer
+  uint16_t _cmdIdx;                 // next character store index
+  Stream& _Scmd;                       // I/O stream object
 
   // The command table and size of table (number of items)
   const cmdItem_t *_cmdTable;

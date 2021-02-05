@@ -1,5 +1,7 @@
 # Library for simple Command Line Interface
 
+[![arduino-library-badge](https://www.ardu-badge.com/badge/MD_cmdProcessor.svg?)](https://www.ardu-badge.com/MD_cmdProcessor)
+
 Table driven command line interface with basic syntax useful for simple requirements like testing applications. Reads input from Stream passed as a parameter, and writes to Stream output.
 
 A command is defined as 

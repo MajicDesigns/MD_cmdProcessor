@@ -15,6 +15,7 @@ cmdItem_t	KEYWORD1
 begin	KEYWORD2
 process	KEYWORD2
 run	KEYWORD2
+getLastCmdLine	KEYWORD2
 
 ######################################
 # Constants/defines (LITERAL1)

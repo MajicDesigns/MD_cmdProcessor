@@ -131,6 +131,7 @@ public:
 
       if (c == EOLN)  // end of line
       {
+        strcpy(_cmdSave, _cmdInput);  // save the buffer
         b = process(_cmdInput);
         _cmdIdx = 0; // reset for the next run
       }
@@ -146,7 +147,7 @@ public:
 
   const char* getLastCmdLine(void)
   {
-    return(_cmdInput);
+    return(_cmdSave);
   }
 
   void help(void)
@@ -187,6 +188,7 @@ private:
 
   // Input/Output 
   char _cmdInput[CMD_BUF_SIZE + 1]; // character buffer
+  char _cmdSave[CMD_BUF_SIZE + 1];  // saved buffer for reporting
   uint16_t _cmdIdx;                 // next character store index
   Stream& _Scmd;                    // I/O stream object
 

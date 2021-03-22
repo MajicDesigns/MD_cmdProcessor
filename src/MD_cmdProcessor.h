@@ -46,8 +46,8 @@ public:
   };
 
   // Constructor/destructor
-  MD_cmdProcessor(Stream& S, const cmdItem_t* cmdTable, uint16_t size) :
-    _cmdIdx(0), _Scmd(S), _cmdSize(size), _cmdTable(cmdTable)
+  MD_cmdProcessor(Stream& S, const cmdItem_t* cmdTable, uint16_t size, bool noError = false) :
+    _cmdIdx(0), _Scmd(S), _cmdSize(size), _cmdTable(cmdTable), _noError(noError)
   {}
 
   ~MD_cmdProcessor(void) {}
@@ -95,8 +95,11 @@ public:
       if (idx == _cmdSize)
       {
         // Not found :(
-        _Scmd.print(F("\nInvalid cmd: "));
-        _Scmd.print(pcmd);
+        if (!_noError)
+        {
+          _Scmd.print(F("\nInvalid cmd: "));
+          _Scmd.print(pcmd);
+        }
         b = false;
       }
       else
@@ -195,4 +198,7 @@ private:
   // The command table and size of table (number of items)
   uint16_t _cmdSize;
   const cmdItem_t *_cmdTable;
+
+  // Other options
+  bool _noError;    // suppress error message when true
 };
